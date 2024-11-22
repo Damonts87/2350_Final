@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Observations</title>
+    <link rel="stylesheet" href="../styles.css">
+    <script src="../script.js" defer></script>
+</head>
+<body>
+    <nav>
+        <div class="brand">
+            <a href="../index.html">
+                <img src="../images/avylogo.png" alt="Avy logo" />
+            </a>
+        </div>
+        <ul class="nav-links">
+            <li class="dropdown">
+                <a href="../Observations.html">Observations</a>
+                <ul class="dropdown-menu">
+                    <li><a href="SubmitObs.html">Submit Observations</a></li>
+                    <li><a href="ViewObs.html">View Observations</a></li>
+                </ul>
+            </li>
+            <li><a href="../Classes.html">Classes</a></li>
+            <li><a href="../Events.html">Events</a></li>
+            <li><a href="../Support.html">Support Us</a></li>
+            <li><a href="../About.html">About</a></li>
+        </ul>
+    </nav>
+
+    <section>
+        <h1 class="index-header">View Observations</h1><br>
+        <div id="observations-list"></div> <!-- This will be populated by JavaScript -->
+    </section>
+
+    <footer>
+        <div class="footer-container">
+            <div class="footer-address">
+                <p>P.O. Box 56</p>
+                <p>Huntsville, UT</p>
+                <p>84317, USA</p>
+            </div>
+
+            <div class="footer-social">
+                <a href="https://www.facebook.com/Ogdenavalanche/" target="_blank" aria-label="Facebook">Facebook</a>
+                <a href="https://www.youtube.com/channel/UCwweFD0D2FAQemDZtdgyl9w?view_as=subscriber" target="_blank" aria-label="Youtube">Youtube</a>
+                <a href="https://www.instagram.com/ogdenavalanche/" target="_blank" aria-label="Instagram">Instagram</a>
+            </div>
+
+            <div class="footer-contact">
+                <p>Email: <a href="mailto:Ogdenavy@ogdenavalanche.org">Ogdenavy@ogdenavalanche.org</a></p>
+            </div>
+        </div>
+        <p>Copyright &copy; 2024 Damon Sirois All Rights Reserved</p>
+    </footer>
+
+    <script>
+        window.onload = function() {
+            // Get the observations from localStorage
+            const observations = getObservations();
+        
+            // Get the observations list container
+            const observationsList = document.getElementById("observations-list");
+        
+            // If there are no observations, show a message
+            if (observations.length === 0) {
+                observationsList.innerHTML = "<h3>No observations have been submitted yet.</h3>";
+            } else {
+                // Loop through the observations in reverse order (newest first)
+                observations.reverse().forEach(function(obs, index) {
+                    const obsDiv = document.createElement("div");
+                    obsDiv.classList.add("observation");
+        
+                    obsDiv.innerHTML = `
+                        <h3>Name: ${obs.name}</h3>
+                        <p>Date: ${obs.date}</p>
+                        <p>Location: ${obs.location}</p>
+                        <p>Avalanche: ${obs.avalanche}</p>
+                        <button class="delete-btn" data-index="${index}">Delete Observation</button>
+                        <hr>
+                    `;
+        
+                    // Append the observation to the list
+                    observationsList.appendChild(obsDiv);
+                });
+        
+                // Add delete functionality
+                const deleteButtons = document.querySelectorAll(".delete-btn");
+                deleteButtons.forEach(button => {
+                    button.addEventListener("click", function() {
+                        const index = this.getAttribute("data-index");
+        
+                        // Get the observations from localStorage again
+                        let observations = getObservations();
+        
+                        // Remove the observation from the array
+                        observations.splice(index, 1);
+        
+                        // Update localStorage with the new array
+                        saveObservations(observations);
+        
+                        // Refresh the list of observations
+                        window.location.reload();
+                    });
+                });
+            }
+        };
+        
+    </script>
+</body>
+</html>
